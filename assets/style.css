@@ -220,3 +220,19 @@ hr.gd{border:none;border-top:1px solid var(--border2);margin:18px 0}
   .c-gold,.c-green,.c-red,.c-blue,.c-purple,.c-orange{color:#111 !important}
   .pf{opacity:.8 !important}
 }
+/* ── PDF PRINT MODE ── */
+.pdf-mode{background:#fff!important}
+.pdf-mode body{background:#fff!important;color:#111!important}
+.pdf-mode .nav,.pdf-mode .step-panel .btn,.pdf-mode #phases{display:none!important}
+.pdf-mode .card,.pdf-mode .kpi{border:1px solid #ddd!important;background:#fff!important;box-shadow:none!important}
+.pdf-mode .card-title{color:#333!important}
+.pdf-mode .kpi .val{color:#111!important}
+.pdf-mode .kpi .lbl,.pdf-mode .kpi .sub,.pdf-mode .score-bar .name,.pdf-mode .score-bar .num{color:#666!important}
+.pdf-mode .ab{background:#f5f5f5!important;border:1px solid #ddd!important}
+.pdf-mode .abody{color:#444!important}
+.pdf-mode .abody strong{color:#111!important}
+.pdf-mode .dot{border:1px solid #999!important}
+.pdf-mode .ring-center .n{color:#333!important}
+.pdf-mode .ring-center .l{color:#666!important}
+.pdf-mode .c-gold,.pdf-mode .c-green,.pdf-mode .c-red,.pdf-mode .c-blue,.pdf-mode .c-purple,.pdf-mode .c-orange{color:#333!important}
+.pdf-mode #report-content{background:#fff!important}
