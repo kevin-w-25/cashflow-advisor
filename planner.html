@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>现金流规划助手 · 分析报告</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">💎</div>
+    <span class="nav-title">现金流规划助手</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" data-page="index" href="index.html">🏠 首页</a>
+    <a class="nav-link active" data-page="planner" href="planner.html">📊 开始分析</a>
+  </div>
+</nav>
+
+<div class="main" style="max-width:960px">
+
+  <!-- 步骤指示器 -->
+  <div class="phases" id="phases">
+    <div class="phase active" data-step="1"><span class="pn">1</span>基本信息</div>
+    <div class="phase" data-step="2"><span class="pn">2</span>收支数据</div>
+    <div class="phase" data-step="3"><span class="pn">3</span>分析报告</div>
+  </div>
+
+  <!-- ═══════ STEP 1: 基本信息 ═══════ -->
+  <div id="step1" class="step-panel">
+    <div class="page-header">
+      <div class="page-title">第一步：基本信息</div>
+      <div class="page-sub">请填写您的基本信息，帮助我们为您量身定制分析</div>
+    </div>
+
+    <div class="card gb" style="margin-bottom:20px">
+      <div class="card-title"><span class="ico">👤</span> 个人信息</div>
+      <div class="frow">
+        <div class="fg"><label>姓名 *</label><input type="text" id="s-name" placeholder="请输入您的姓名"/></div>
+        <div class="fg"><label>年龄 *</label><input type="number" id="s-age" placeholder="如：45" min="18" max="100"/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>预计退休年龄</label><input type="number" id="s-retire" placeholder="60" value="60" min="40" max="80"/></div>
+        <div class="fg">
+          <label>风险偏好</label>
+          <select id="s-risk">
+            <option value="conservative">保守型</option>
+            <option value="moderate" selected>稳健型</option>
+            <option value="growth">成长型</option>
+            <option value="aggressive">激进型</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg">
+          <label>主要货币</label>
+          <select id="s-currency">
+            <option value="USD">美元 (USD)</option>
+            <option value="HKD">港币 (HKD)</option>
+            <option value="CNY">人民币 (CNY)</option>
+            <option value="SGD">新加坡元 (SGD)</option>
+          </select>
+        </div>
+        <div class="fg"><label>紧急预备金目标（月）</label><input type="number" id="s-emonths" value="6" min="3" max="24"/></div>
+      </div>
+    </div>
+
+    <div class="card gb" style="margin-bottom:20px">
+      <div class="card-title"><span class="ico">🏠</span> 资产情况</div>
+      <div class="frow">
+        <div class="fg"><label>流动现金</label><div class="unit"><input type="number" id="s-cash" placeholder="0"/><span class="uf">月</span></div></div>
+        <div class="fg"><label>储蓄保险 / 年金</label><div class="unit"><input type="number" id="s-savings-plan" placeholder="0"/><span class="uf">总额</span></div></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>信托资产</label><div class="unit"><input type="number" id="s-trust" placeholder="0"/><span class="uf">总额</span></div></div>
+        <div class="fg"><label>投资性房产</label><div class="unit"><input type="number" id="s-property" placeholder="0"/><span class="uf">市值</span></div></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>股票 / 基金</label><div class="unit"><input type="number" id="s-stocks" placeholder="0"/><span class="uf">市值</span></div></div>
+        <div class="fg"><label>黄金 / 其他</label><div class="unit"><input type="number" id="s-gold" placeholder="0"/><span class="uf">市值</span></div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn btn-gold" onclick="goStep(2)">下一步：收支数据 →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 2: 收支数据 ═══════ -->
+  <div id="step2" class="step-panel" style="display:none">
+    <div class="page-header">
+      <div class="page-title">第二步：收支数据</div>
+      <div class="page-sub">请填写您的月度收入与支出明细</div>
+    </div>
+
+    <div class="card gb" style="margin-bottom:20px">
+      <div class="card-title"><span class="ico">💰</span> 月度收入</div>
+      <div class="frow">
+        <div class="fg"><label>主动收入（工资/薪金）</label><div class="unit"><input type="number" id="s-active" placeholder="0"/><span class="uf">/月</span></div></div>
+        <div class="fg"><label>被动收入（租金/分红/利息）</label><div class="unit"><input type="number" id="s-passive" placeholder="0"/><span class="uf">/月</span></div></div>
+      </div>
+    </div>
+
+    <div class="card gb" style="margin-bottom:20px">
+      <div class="card-title"><span class="ico">💸</span> 月度支出</div>
+      <div class="frow">
+        <div class="fg"><label>刚性支出（房租/房贷/保险/水电）</label><div class="unit"><input type="number" id="s-essential" placeholder="0"/><span class="uf">/月</span></div></div>
+        <div class="fg"><label>弹性支出（餐饮/交通/娱乐）</label><div class="unit"><input type="number" id="s-flex" placeholder="0"/><span class="uf">/月</span></div></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>保障性支出（人寿/医疗/重疾险）</label><div class="unit"><input type="number" id="s-premium" placeholder="0"/><span class="uf">/月</span></div></div>
+        <div class="fg"><label>债务还款（房贷/车贷/信用卡）</label><div class="unit"><input type="number" id="s-debt" placeholder="0"/><span class="uf">/月</span></div></div>
+      </div>
+    </div>
+
+    <div class="card gb" style="margin-bottom:20px">
+      <div class="card-title"><span class="ico">🎯</span> 目标规划（选填）</div>
+      <div class="frow">
+        <div class="fg"><label>退休后期望月度支出</label><div class="unit"><input type="number" id="s-retire-need" placeholder="0"/><span class="uf">/月</span></div></div>
+        <div class="fg"><label>子女教育储备目标</label><div class="unit"><input type="number" id="s-edu-goal" placeholder="0"/><span class="uf">总额</span></div></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>教育储备年限</label><input type="number" id="s-edu-years" placeholder="8" value="8" min="1" max="25"/></div>
+        <div class="fg">
+          <label>财富传承意愿</label>
+          <select id="s-legacy">
+            <option value="none">暂无特别规划</option>
+            <option value="trust">已设立 / 计划设立信托</option>
+            <option value="full">全面传承规划</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between">
+      <button class="btn btn-ghost" onclick="goStep(1)">← 上一步</button>
+      <button class="btn btn-gold" onclick="generateReport()">生成分析报告 →</button>
+    </div>
+  </div>
+
+  <!-- ═══════ STEP 3: 分析报告 ═══════ -->
+  <div id="step3" class="step-panel" style="display:none">
+    <div id="report-content">
+      <!-- 动态生成 -->
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:24px;padding-top:24px;border-top:1px solid var(--border2)">
+      <button class="btn btn-ghost" onclick="goStep(2)">← 修改数据</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="location.href='planner.html'">新建分析</button>
+        <button class="btn btn-gold" onclick="downloadPDF()">📄 下载 PDF 报告</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+initNav('planner');
+
+// ── 当前分析数据（内存中，不持久化） ──
+let reportData = null;
+
+// ── 步骤导航 ──
+function goStep(n) {
+  if (n === 2 && !validateStep1()) return;
+  if (n === 3 && reportData === null) return;
+
+  document.querySelectorAll('.step-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('step' + n).style.display = 'block';
+  document.querySelectorAll('.phase').forEach(p => {
+    const s = parseInt(p.dataset.step);
+    p.classList.toggle('active', s === n);
+    p.querySelector('.pn').classList.toggle('filled', s < n);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validateStep1() {
+  const name = v('s-name').trim();
+  const age = parseInt(v('s-age'));
+  if (!name) { toast('请输入姓名', 'error'); return false; }
+  if (!age || age < 18 || age > 100) { toast('请输入有效年龄（18-100）', 'error'); return false; }
+  return true;
+}
+
+// ── 收集数据 ──
+function collectData() {
+  return {
+    name: v('s-name').trim(),
+    age: parseInt(v('s-age')) || 45,
+    retireAge: parseInt(v('s-retire')) || 60,
+    riskPref: v('s-risk'),
+    currency: v('s-currency'),
+    emergencyMonths: parseInt(v('s-emonths')) || 6,
+    cash: g('s-cash'),
+    savingsPlan: g('s-savings-plan'),
+    trust: g('s-trust'),
+    property: g('s-property'),
+    stocks: g('s-stocks'),
+    gold: g('s-gold'),
+    other: 0,
+    activeIncome: g('s-active'),
+    passiveIncome: g('s-passive'),
+    essentialExp: g('s-essential'),
+    flexExp: g('s-flex'),
+    premiumExp: g('s-premium'),
+    debtExp: g('s-debt'),
+    retireNeed: g('s-retire-need'),
+    eduGoal: g('s-edu-goal'),
+    eduYears: parseInt(v('s-edu-years')) || 8,
+    legacyWish: v('s-legacy'),
+  };
+}
+
+// ── 生成报告 ──
+function generateReport() {
+  if (!validateStep1()) return;
+  const raw = collectData();
+  reportData = deriveData(raw);
+  renderReport(raw, reportData);
+  goStep(3);
+}
+
+// ── 渲染报告 ──
+function renderReport(raw, d) {
+  const c = d.currency;
+  const riskLabel = { conservative: '保守型', moderate: '稳健型', growth: '成长型', aggressive: '激进型' };
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  const advices = genAdvices(d);
+
+  // 资产配置
+  const allocItems = [
+    { name: '现金', val: d.cash, color: '#4d8fff' },
+    { name: '储蓄险', val: d.savingsPlan, color: '#3ecf8e' },
+    { name: '信托', val: d.trust, color: '#8b5cf6' },
+    { name: '房产', val: d.property, color: '#f59e0b' },
+    { name: '股票', val: d.stocks, color: '#e05555' },
+    { name: '黄金', val: d.gold, color: '#c9a84c' },
+  ].filter(x => x.val > 0);
+
+  const allocHtml = allocItems.length > 0 ? `
+    <div style="margin-top:14px">
+      ${allocItems.map(a => `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:10px;height:10px;border-radius:3px;background:${a.color};flex-shrink:0"></div>
+          <span style="font-size:12px;color:var(--text3);width:60px">${a.name}</span>
+          <div style="flex:1;height:8px;background:var(--dark3);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:${pct(a.val, d.totalAssets)};background:${a.color};border-radius:99px;transition:width .8s"></div>
+          </div>
+          <span style="font-size:12px;color:var(--text2);width:100px;text-align:right">${fmt(a.val, c)} · ${pct(a.val, d.totalAssets)}</span>
+        </div>`).join('')}
+    </div>` : '<div style="font-size:12px;color:var(--text2)">暂无资产数据</div>';
+
+  // 评分明细
+  const scoreItems = [
+    { name: '紧急预备金', val: d.scores.emergency, max: 20 },
+    { name: '储蓄能力', val: d.scores.savings, max: 20 },
+    { name: '负债管理', val: d.scores.debt, max: 20 },
+    { name: '被动收入', val: d.scores.passive, max: 20 },
+    { name: '资产分散度', val: d.scores.diversify, max: 20 },
+  ];
+  const scoreColor = v => v >= 16 ? 'var(--green)' : v >= 12 ? 'var(--gold)' : 'var(--red)';
+
+  const html = `
+    <!-- 报告头部 -->
+    <div style="text-align:center;margin-bottom:32px;padding:28px 20px;background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border-radius:16px;border:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:6px;letter-spacing:1px">现金流健康分析报告</div>
+      <div style="font-size:24px;font-weight:800;margin-bottom:4px">${d.name}</div>
+      <div style="font-size:13px;color:var(--text2)">${d.age}岁 · ${riskLabel[d.riskPref] || '稳健型'} · ${dateStr}</div>
+    </div>
+
+    <!-- 核心评分 -->
+    <div class="grid2" style="margin-bottom:24px">
+      <div class="card" style="text-align:center">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px">综合健康评分</div>
+        <div class="ring-wrap">
+          <div class="ring"><canvas id="score-canvas" width="110" height="110"></canvas>
+            <div class="ring-center"><div class="n" id="score-num">${d.scores.total}</div><div class="l">${d.scores.label}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:16px">评分明细</div>
+        ${scoreItems.map(s => `
+          <div class="score-bar">
+            <span class="name">${s.name}</span>
+            <div class="track"><div class="fill" style="width:${(s.val/s.max*100).toFixed(0)}%;background:${scoreColor(s.val)}"></div></div>
+            <span class="num">${s.val}/${s.max}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- 收支概况 -->
+    <div class="grid3" style="margin-bottom:24px">
+      <div class="kpi"><div class="lbl">月度总收入</div><div class="val c-green">${fmt(d.totalIncome, c)}</div><div class="sub">主动 ${fmt(d.activeIncome, c)} + 被动 ${fmt(d.passiveIncome, c)}</div></div>
+      <div class="kpi"><div class="lbl">月度总支出</div><div class="val c-red">${fmt(d.totalExp, c)}</div><div class="sub">刚性 ${fmt(d.essentialExp, c)} + 弹性 ${fmt(d.flexExp, c)}</div></div>
+      <div class="kpi"><div class="lbl">月度结余</div><div class="val ${d.monthlySurplus >= 0 ? 'c-green' : 'c-red'}">${fmt(d.monthlySurplus, c)}</div><div class="sub">年结余 ${fmt(d.annualSurplus, c)}</div></div>
+    </div>
+
+    <!-- 关键指标 -->
+    <div class="card gb" style="margin-bottom:24px">
+      <div class="card-title"><span class="ico">📊</span> 关键指标</div>
+      <div class="grid2">
+        <div>
+          <div class="pw"><div class="ph"><span>储蓄率</span><span>${(d.savingsRate * 100).toFixed(1)}%</span></div>
+            <div class="pt"><div class="pf" style="width:${cl(d.savingsRate*100,0,100).toFixed(0)}%;background:${d.savingsRate >= 0.2 ? 'var(--green)' : 'var(--gold)'}"></div></div>
+          </div>
+          <div class="pw"><div class="ph"><span>债务比率</span><span>${(d.debtRatio * 100).toFixed(1)}%</span></div>
+            <div class="pt"><div class="pf" style="width:${cl(d.debtRatio*100,0,100).toFixed(0)}%;background:${d.debtRatio <= 0.3 ? 'var(--green)' : d.debtRatio <= 0.4 ? 'var(--gold)' : 'var(--red)'}"></div></div>
+          </div>
+          <div class="pw"><div class="ph"><span>被动收入占比</span><span>${(d.passiveRatio * 100).toFixed(1)}%</span></div>
+            <div class="pt"><div class="pf" style="width:${cl(d.passiveRatio*100,0,100).toFixed(0)}%;background:${d.passiveRatio >= 0.4 ? 'var(--green)' : 'var(--gold)'}"></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="pw"><div class="ph"><span>紧急预备金覆盖</span><span>${(d.emergencyCoverage * 100).toFixed(0)}%</span></div>
+            <div class="pt"><div class="pf" style="width:${cl(d.emergencyCoverage*100,0,100).toFixed(0)}%;background:${d.emergencyCoverage >= 1 ? 'var(--green)' : 'var(--red)'}"></div></div>
+          </div>
+          <div class="pw"><div class="ph"><span>距退休</span><span>${d.yearsToRetire} 年</span></div>
+            <div class="pt"><div class="pf" style="width:${cl(100-d.yearsToRetire*2.5,0,100).toFixed(0)}%;background:var(--blue)"></div></div>
+          </div>
+          <div class="pw"><div class="ph"><span>总资产</span><span>${fmt(d.totalAssets, c)}</span></div>
+            <div class="pt"><div class="pf" style="width:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light))"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 资产配置 -->
+    <div class="card gb" style="margin-bottom:24px">
+      <div class="card-title"><span class="ico">🏗️</span> 资产配置 <span style="font-size:11px;color:var(--text2);font-weight:400;margin-left:auto">总计 ${fmt(d.totalAssets, c)}</span></div>
+      ${allocHtml}
+    </div>
+
+    <!-- 退休规划 -->
+    ${d.retireNeed > 0 ? `
+    <div class="card gb" style="margin-bottom:24px">
+      <div class="card-title"><span class="ico">🏝️</span> 退休规划预估</div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">退休后月度需求</div>
+          <div style="font-size:18px;font-weight:700;color:var(--gold);margin-bottom:12px">${fmt(d.retireNeed, c)} <span style="font-size:12px;color:var(--text2)">/ 月</span></div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:4px">当前被动收入可覆盖 ${fmt(d.passiveIncome, c)}/月</div>
+          <div style="font-size:12px;color:${d.retireGap > 0 ? 'var(--red)' : 'var(--green)'}">${d.retireGap > 0 ? '月度缺口 ' + fmt(d.retireGap, c) : '✓ 被动收入已覆盖退休需求'}</div>
+          ${d.retireGap > 0 ? `<div style="font-size:12px;color:var(--text2);margin-top:4px">需额外积累 ${fmt(d.retireCapNeeded, c)}（按 4% 安全提取率）</div>` : ''}
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px">${d.yearsToRetire} 年后预估资产</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px">储蓄险 ${fmt(d.retireEst.savingsPlan, c)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px">股票投资 ${fmt(d.retireEst.stocks, c)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px">黄金储备 ${fmt(d.retireEst.gold, c)}</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:6px">新增储蓄 ${fmt(d.retireEst.newSavings, c)}</div>
+          ${d.trust > 0 ? `<div style="font-size:12px;color:var(--text3);margin-bottom:6px">信托资产 ${fmt(d.retireEst.trust, c)}</div>` : ''}
+          <hr class="gd"/>
+          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600">
+            <span>预估资产合计</span><span class="c-gold">${fmt(d.retireEst.total, c)}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">4% 规则月提取 ≈ ${fmt(d.retireEst.monthly4pct, c)}</div>
+        </div>
+      </div>
+    </div>` : ''}
+
+    <!-- 教育规划 -->
+    ${d.eduGoal > 0 ? `
+    <div class="card gb" style="margin-bottom:24px">
+      <div class="card-title"><span class="ico">🎓</span> 子女教育储备</div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">教育目标</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue);margin-bottom:4px">${fmt(d.eduGoal, c)}</div>
+          <div style="font-size:12px;color:var(--text2)">${d.eduYears} 年准备期</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">建议月供</div>
+          <div style="font-size:18px;font-weight:700;color:var(--blue);margin-bottom:4px">${fmt(d.eduMonthly, c)} <span style="font-size:12px;color:var(--text2)">/ 月</span></div>
+          <div style="font-size:12px;color:var(--text2)">月结余占比 ${d.monthlySurplus > 0 ? pct(d.eduMonthly, d.monthlySurplus) : 'N/A'}</div>
+        </div>
+      </div>
+    </div>` : ''}
+
+    <!-- 优化建议 -->
+    <div class="card gb" style="margin-bottom:24px">
+      <div class="card-title"><span class="ico">💡</span> 优化建议</div>
+      ${advices.map(a => `
+        <div class="ab ${a.t}">
+          <div class="ah"><span class="dot ${a.t === 'urgent' ? 'r' : a.t === 'warn' ? 'y' : 'g'}"></span>${a.h}</div>
+          <div class="abody">${a.b}</div>
+        </div>`).join('')}
+    </div>
+
+    <!-- 免责声明 -->
+    <div style="text-align:center;font-size:11px;color:var(--text2);opacity:.5;padding:16px 0">
+      本报告由现金流规划助手自动生成，仅供参考，不构成投资建议。<br>
+      所有数据仅在您的浏览器中处理，不会上传至任何服务器。${dateStr}
+    </div>
+  `;
+
+  document.getElementById('report-content').innerHTML = html;
+
+  // 绘制评分环
+  setTimeout(() => drawScoreCanvas('score-canvas', d.scores.total), 50);
+}
+
+// ── PDF 导出 ──
+function downloadPDF() {
+  if (!reportData) return;
+
+  const el = document.getElementById('report-content');
+  const btns = el.closest('.main').querySelector('div[style*="justify-content:space-between"]');
+  const origDisplay = btns ? btns.style.display : '';
+
+  // 隐藏操作按钮
+  if (btns) btns.style.display = 'none';
+
+  const c = reportData.currency;
+  const fileName = `现金流分析报告_${reportData.name}_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+  toast('正在生成 PDF，请稍候...');
+
+  html2pdf().set({
+    margin: [10, 10, 10, 10],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#0f1117',
+      logging: false,
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(el).save().then(() => {
+    if (btns) btns.style.display = origDisplay;
+    toast('PDF 报告已生成');
+  }).catch(() => {
+    if (btns) btns.style.display = origDisplay;
+    toast('PDF 生成失败，请重试', 'error');
+  });
+}
+</script>
+</body>
+</html>
